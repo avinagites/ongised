@@ -1,0 +1,21 @@
+---
+import Main from "../components/main.astro";
+import Footer from "../components/footer.astro";
+import Header from "../components/header.astro";
+import BaseLayout from "../layouts/base-layout.astro";
+import GetInTouch from "../sections/get-in-touch.astro";
+import Hero from "../sections/hero.astro";
+import IllustrationBanner from "../sections/illustration-banner.astro";
+import Project from "../sections/project.astro";
+---
+
+<BaseLayout>
+  <Header />
+  <Main>
+    <Hero />
+    <Project includeIds={["web-design-homepage", "app-design", "graphic-design"]} />
+    <IllustrationBanner />
+    <GetInTouch />
+  </Main>
+  <Footer />
+</BaseLayout>

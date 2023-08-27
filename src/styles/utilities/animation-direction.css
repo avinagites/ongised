@@ -1,0 +1,15 @@
+.animation-normal {
+  animation-direction: normal;
+}
+
+.animation-reverse {
+  animation-direction: reverse;
+}
+
+.animation-alternate {
+  animation-direction: alternate;
+}
+
+.animation-alternate-reverse {
+  animation-direction: alternate-reverse;
+}

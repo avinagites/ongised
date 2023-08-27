@@ -1,0 +1,53 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+import { getImage } from "astro:assets";
+
+import bgPattern from "../assets/hero/bg-pattern.svg";
+import phone from "../assets/hero/phone.png";
+
+const optimizedBgPattern = await getImage({ src: bgPattern });
+const optimizedPhone = await getImage({ src: phone, format: "webp" });
+
+const { lang, prefix } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<Section class="pt-0 md:mt-0 xl:pt-0">
+  <Container class="!px-0 md:!px-8 xl:!px-16">
+    <div
+      class:list={[
+        "pt-20 px-6 md:px-14 md:pt-14 xl:pl-24 xl:pt-0 xl:pr-0 flex flex-col justify-center items-center bg-peach bg-[length:40rem_40rem] bg-no-repeat bg-[top_6rem_left] md:bg-[top_6rem_right_-6rem] lg:bg-[top_6rem_right] xl:bg-[top_right] sm:rounded-2xl xl:flex-row xl:min-h-[40rem]",
+        className,
+      ]}
+      style={`background-image: url(${optimizedBgPattern.src});`}
+    >
+      <div
+        class="relative z-10 flex flex-col items-center justify-center gap-6 text-center md:max-w-[29rem] md:gap-5 xl:max-w-[33rem] xl:items-start xl:gap-10 xl:text-left"
+      >
+        <h1 class="text-white">{t("hero.heading")}</h1>
+        <p class="text-white xl:max-w-[27rem]">{t("hero.content")}</p>
+        <a href={`${prefix}${t("hero.btn.url")}`} aria-label={t("hero.btn.aria")} class="btn-on-dark focus-on-dark">
+          {t("hero.btn.title")}
+        </a>
+      </div>
+      <div
+        class="z-0 mt-[-2rem] aspect-[412/420] w-full bg-[length:120%_auto] bg-[center_top] bg-no-repeat sm:aspect-auto sm:min-h-[30rem] sm:bg-[length:38rem_auto] sm:bg-[top_-3.5rem_center] xl:mt-0 xl:min-h-[40rem] xl:bg-[top_-1rem_right_-3.8rem]"
+        style={`background-image: url(${optimizedPhone.src});`}
+      >
+      </div>
+    </div>
+    <div
+      class="absolute left-[-5rem] top-[20rem] -z-20 hidden h-[37rem] w-[64rem] rounded-[18rem_18rem_18rem_0] bg-athens-grey opacity-50 xl:block 2xl:w-[80rem]"
+    >
+    </div>
+  </Container>
+</Section>

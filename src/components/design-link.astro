@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getImage } from "astro:assets";
+
+interface Props {
+  design: CollectionEntry<"design">;
+}
+
+const {
+  design: { data },
+} = Astro.props;
+
+const bg = await getImage({ src: data.bg, width: 327, height: 320, format: "webp" });
+---
+
+<a
+  href={data.url}
+  aria-label={data.aria ?? undefined}
+  target="_blank"
+  rel="noreferrer"
+  class:list={["flex flex-col md:flex-row xl:flex-col w-full group max-w-[20rem] md:max-w-full mx-auto rounded-2xl"]}
+>
+  <div
+    class="design-link h-[20rem] w-full rounded-t-2xl bg-cover bg-top bg-no-repeat md:h-[19.375rem] md:basis-1/2 md:rounded-none md:rounded-l-2xl xl:h-[20rem] xl:basis-auto xl:rounded-none xl:rounded-t-2xl"
+  >
+  </div>
+  <div
+    class="translate-[background] flex flex-col items-center justify-center gap-4 rounded-b-2xl bg-provincial-pink px-7 py-8 text-center duration-400 group-hover:bg-peach md:basis-1/2 md:rounded-none md:rounded-r-2xl xl:rounded-none xl:rounded-b-2xl"
+  >
+    <h3 class="translate-[color] text-moccaccino duration-400 group-hover:text-white">{data.title}</h3>
+    <p class="translate-[color] max-w-[18rem] text-ship-grey duration-400 group-hover:text-white">{data.description}</p>
+  </div>
+</a>
+
+<style
+  define:vars={{
+    bg: `url(${bg.src})`,
+  }}
+>
+  .design-link {
+    @apply bg-[image:var(--bg)];
+  }
+</style>

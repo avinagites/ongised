@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+import DesignLink from "../components/design-link.astro";
+
+interface Props {
+  designs: CollectionEntry<"design">[];
+  class?: string;
+}
+
+const { designs, class: className } = Astro.props;
+---
+
+<Section>
+  <Container>
+    <div class:list={["grid grid-cols-1 xl:grid-cols-3 gap-10 md:gap-8", className]}>
+      {designs.map((design) => <DesignLink design={design} />)}
+    </div>
+  </Container>
+</Section>

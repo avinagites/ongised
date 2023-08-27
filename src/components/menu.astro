@@ -1,0 +1,102 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+interface Props {
+  class?: string;
+  style?: string;
+  onDark?: boolean;
+  mobile?: boolean;
+}
+
+const { class: className, style, onDark = false, mobile = false } = Astro.props;
+
+const { lang, prefix } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+---
+
+<nav
+  class:list={["flex flex-col justify-center md:flex-row", mobile ? "items-start" : "items-center", className]}
+  style={style}
+>
+  <ul
+    class:list={[
+      "inline-flex flex-col gap-8 justify-center md:flex-row md:gap-11",
+      mobile ? "items-start" : "items-center",
+    ]}
+  >
+    <li>
+      <a
+        href={`${prefix}${t("about.url")}`}
+        aria-label={t("about.aria")}
+        class:list={[
+          mobile
+            ? onDark
+              ? "mobile-nav-link-on-dark focus-on-dark"
+              : "mobile-nav-link-on-light focus-on-light"
+            : onDark
+            ? "nav-link-on-dark focus-on-dark"
+            : "nav-link-on-light focus-on-light",
+        ]}
+      >
+        {t("about.title")}
+      </a>
+    </li>
+    <li>
+      <a
+        href={`${prefix}${t("location.url")}`}
+        aria-label={t("location.aria")}
+        class:list={[
+          mobile
+            ? onDark
+              ? "mobile-nav-link-on-dark focus-on-dark"
+              : "mobile-nav-link-on-light focus-on-light"
+            : onDark
+            ? "nav-link-on-dark focus-on-dark"
+            : "nav-link-on-light focus-on-light",
+        ]}
+      >
+        {t("location.title")}
+      </a>
+    </li>
+    <li>
+      <a
+        href={`${prefix}${t("contact.url")}`}
+        aria-label={t("contact.aria")}
+        class:list={[
+          mobile
+            ? onDark
+              ? "mobile-nav-link-on-dark focus-on-dark"
+              : "mobile-nav-link-on-light focus-on-light"
+            : onDark
+            ? "nav-link-on-dark focus-on-dark"
+            : "nav-link-on-light focus-on-light",
+        ]}
+      >
+        {t("contact.title")}
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .nav-link-base {
+    @apply inline-flex rounded-tl-2xl rounded-tr-2xl border-b-[0.063rem] border-b-transparent text-[0.938rem] uppercase leading-none transition-[border] duration-400;
+  }
+  .nav-link-on-light {
+    @apply nav-link-base text-ship-grey hover:border-b-ship-grey;
+  }
+  .nav-link-on-dark {
+    @apply nav-link-base text-white hover:border-b-white;
+  }
+
+  .mobile-nav-link-base {
+    @apply inline-flex text-[1.5rem] uppercase leading-[104%] tracking-[0.125rem];
+  }
+  .mobile-nav-link-on-light {
+    @apply mobile-nav-link-base text-ship-grey hover:border-b-ship-grey;
+  }
+  .mobile-nav-link-on-dark {
+    @apply mobile-nav-link-base text-white hover:border-b-white;
+  }
+</style>

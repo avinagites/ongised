@@ -1,0 +1,55 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+import { ContactForm } from "../components/contact-form";
+import { getImage } from "astro:assets";
+
+import bgPatternMobile from "../assets/contact/mobile/bg-hero-pattern.svg";
+import bgPatternTablet from "../assets/contact/tablet/bg-hero-pattern.svg";
+
+const optimizedBgPatternMobile = await getImage({ src: bgPatternMobile });
+const optimizedBgPatternTablet = await getImage({ src: bgPatternTablet });
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<Section class="!py-0 sm:!pb-[3.75rem] md:mt-0 xl:!pb-[5rem] xl:pt-0">
+  <Container class="!px-0 md:!px-8 xl:!px-16">
+    <div
+      class:list={[
+        "hero-contact-pattern",
+        "flex flex-col items-center gap-12 px-6 py-[4.5rem] text-center sm:rounded-2xl md:items-start md:gap-10 md:px-16 md:text-left xl:flex-row xl:items-center xl:gap-24 xl:px-24",
+        "bg-peach bg-[top_left] bg-no-repeat md:bg-[top_-5rem_left_-5rem] xl:bg-[bottom_left]",
+        className,
+      ]}
+    >
+      <div class="flex h-full flex-1 flex-col items-center justify-center gap-6 md:items-start md:gap-8 xl:basis-1/2">
+        <h1 class="text-white">{t("contact.hero.heading")}</h1>
+        <p class="text-white md:max-w-[35rem] xl:max-w-[27rem]">{t("contact.hero.content")}</p>
+      </div>
+      <div class="w-full xl:basis-1/2">
+        <ContactForm client:visible />
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<style
+  define:vars={{
+    bgMobile: `url(${optimizedBgPatternMobile.src})`,
+    bgTablet: `url(${optimizedBgPatternTablet.src})`,
+  }}
+>
+  .hero-contact-pattern {
+    @apply bg-[image:var(--bgMobile)] md:bg-[image:var(--bgTablet)];
+  }
+</style>

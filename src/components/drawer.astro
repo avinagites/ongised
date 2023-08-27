@@ -1,0 +1,85 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Container from "./container.astro";
+import Menu from "./menu.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+---
+
+<astro-drawer class={className}>
+  <button
+    data-toggle-drawer
+    aria-label={t("drawer.aria.toggle")}
+    aria-controls="drawer"
+    class="toggle-drawer focus-on-light group relative flex h-[1.3rem] w-[1.6rem]"
+  >
+    <span class="span left-0 top-0 group-[.open]:left-0.5 group-[.open]:top-1 group-[.open]:rotate-45"></span>
+    <span class="span right-0 top-0 group-[.open]:right-0.5 group-[.open]:top-1 group-[.open]:-rotate-45"></span>
+    <span class="span left-0 top-2 group-[.open]:left-[-50%] group-[.open]:opacity-0"></span>
+    <span class="span right-0 top-2 group-[.open]:right-[-50%] group-[.open]:opacity-0"></span>
+    <span class="span left-0 top-4 group-[.open]:left-0.5 group-[.open]:top-3 group-[.open]:-rotate-45"></span>
+    <span class="span right-0 top-4 group-[.open]:right-0.5 group-[.open]:top-3 group-[.open]:rotate-45"></span>
+  </button>
+  <div
+    data-overlay
+    class="fixed inset-0 top-0 z-40 mt-[6rem] h-screen w-screen translate-x-full bg-black/50 duration-400"
+  >
+    <div
+      id="drawer"
+      data-drawer
+      class:list={["fixed top-0 w-full bg-baltic text-white translate-x-full py-12 px-6 z-40", className]}
+      tabindex={-1}
+    >
+      <Container>
+        <Menu onDark={true} mobile={true} />
+      </Container>
+    </div>
+  </div>
+</astro-drawer>
+
+<style>
+  .span {
+    @apply absolute block h-1 w-[50%] bg-baltic opacity-100 transition-all duration-400 ease-in-out;
+  }
+</style>
+
+<script>
+  class AstroDrawer extends HTMLElement {
+    constructor() {
+      super();
+
+      const toggleButton = this.querySelector("[data-toggle-drawer]")!;
+
+      const overlay = this.querySelector("[data-overlay]")!;
+      const drawer = this.querySelector("[data-drawer]")!;
+      const body = document.querySelector("[data-body]")!;
+
+      const toggle = () => {
+        toggleButton.classList.toggle("open");
+        drawer.classList.toggle("!translate-x-0");
+        overlay.classList.toggle("!translate-x-0");
+        body.classList.toggle("overflow-hidden");
+      };
+
+      toggleButton.addEventListener("click", () => {
+        toggle();
+      });
+
+      overlay.addEventListener("click", (event) => {
+        if (!drawer.contains(event.target)) {
+          toggle();
+        }
+      });
+    }
+  }
+
+  customElements.define("astro-drawer", AstroDrawer);
+</script>

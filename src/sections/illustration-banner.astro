@@ -1,0 +1,92 @@
+---
+import { Image } from "astro:assets";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+
+import first from "../assets/illustration/first.svg";
+import second from "../assets/illustration/second.svg";
+import third from "../assets/illustration/third.svg";
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+
+interface Props {
+  class?: string;
+  style?: string;
+}
+
+const { class: className, style } = Astro.props;
+---
+
+<Section class="mb-[-13rem] pb-[7.5rem] sm:mb-[-12rem] md:mb-[-5.5rem] md:pb-[4.2rem] xl:mb-[-4.5rem] xl:pb-[7.5rem]">
+  <Container>
+    <div
+      class:list={["grid grid-cols-1 grid-rows-3 gap-20 md:gap-8 xl:grid-cols-3 xl:grid-rows-1 xl:gap-7", className]}
+      style={style}
+    >
+      <div class="illustration-item">
+        <div class="illustration-oval">
+          <Image src={first} alt={t("illustration.first.heading")} width={202} height={202} />
+        </div>
+        <div class="illustration-content">
+          <h3>{t("illustration.first.heading")}</h3>
+          <p>{t("illustration.first.content")}</p>
+        </div>
+      </div>
+      <div class="illustration-item">
+        <div class="illustration-oval">
+          <Image src={second} alt={t("illustration.second.heading")} width={202} height={202} />
+        </div>
+        <div class="illustration-content">
+          <h3>{t("illustration.second.heading")}</h3>
+          <p>{t("illustration.second.content")}</p>
+        </div>
+      </div>
+      <div class="illustration-item">
+        <div class="illustration-oval">
+          <Image src={third} alt={t("illustration.third.heading")} width={202} height={202} />
+        </div>
+        <div class="illustration-content">
+          <h3>{t("illustration.third.heading")}</h3>
+          <p>{t("illustration.third.content")}</p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="absolute right-[-5rem] top-[8rem] -z-20 hidden h-[37rem] w-[62rem] rounded-[18rem_0_18rem_18rem] bg-athens-grey opacity-50 xl:block 2xl:w-[73rem]"
+    >
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .illustration-item {
+    @apply flex flex-col items-center gap-12 text-center md:mx-auto md:max-w-[43rem] md:flex-row md:justify-start md:text-left xl:mx-0 xl:max-w-full xl:flex-col xl:items-center xl:text-center;
+  }
+
+  .illustration-oval {
+    @apply relative z-0 w-full max-w-[12.625rem];
+  }
+
+  .illustration-content {
+    @apply flex max-w-[25rem] flex-col gap-8 md:max-w-full md:gap-4 xl:gap-8;
+  }
+
+  .illustration-gradient-base {
+    @apply before:absolute before:inset-0 before:-z-10 before:aspect-square before:w-full before:max-w-[12.625rem] before:rounded-full before:from-[rgba(93,2,2,0.00)] before:to-[rgba(93,2,2,0.50)] before:opacity-20 before:content-[''];
+  }
+
+  .illustration-item:nth-child(1) > .illustration-oval {
+    @apply illustration-gradient-base before:bg-gradient-to-l;
+  }
+
+  .illustration-item:nth-child(2) > .illustration-oval {
+    @apply illustration-gradient-base before:bg-gradient-to-b;
+  }
+
+  .illustration-item:nth-child(3) > .illustration-oval {
+    @apply illustration-gradient-base before:bg-gradient-to-t;
+  }
+</style>

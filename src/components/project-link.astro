@@ -1,0 +1,65 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getImage } from "astro:assets";
+import { getLangFromUrl } from "../i18n/utils";
+
+const { prefix } = getLangFromUrl(Astro.url);
+
+interface Props {
+  project: CollectionEntry<"project">;
+}
+
+const {
+  project: { data },
+} = Astro.props;
+
+const bgMobileWebp = await getImage({ src: data.bgMobile, width: 327, height: 250, format: "webp" });
+const bgTabletWebp = await getImage({ src: data.bgTablet, width: 680, height: 200, format: "webp" });
+const bgDesktopWebp = await getImage({
+  src: data.bgDesktop,
+  width: 541,
+  height: data.isHero ? 640 : 308,
+  format: "webp",
+});
+---
+
+<a
+  href={`${prefix}${data.url}`}
+  aria-label={data.aria ?? undefined}
+  class:list={[
+    "project-link",
+    "relative mx-auto min-h-[15.6rem] w-full max-w-[20.438rem] rounded-2xl bg-cover bg-center bg-no-repeat md:min-h-[12.5rem] md:max-w-full xl:min-h-[19.25rem] focus-on-light group",
+    data.isHero ? "xl:row-span-2" : "",
+  ]}
+>
+  <div
+    class="absolute inset-0 flex flex-col items-center justify-center gap-5 rounded-2xl bg-black/50 p-4 text-center uppercase text-white transition-all duration-400 group-hover:bg-peach/80 md:gap-8"
+  >
+    <h2>{data.title}</h2>
+    <p class="inline-flex items-center gap-4 text-[0.9375rem] font-medium tracking-[0.3125rem] text-white">
+      {data.view}
+      <svg
+        width="7"
+        height="10"
+        viewBox="0 0 7 10"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="transition-all duration-400 group-hover:translate-x-1"
+      >
+        <path d="M1.5 1L5.5 5L1.5 9" stroke="#E7816B" stroke-width="2"></path>
+      </svg>
+    </p>
+  </div>
+</a>
+
+<style
+  define:vars={{
+    bgMobileWebp: `url(${bgMobileWebp.src})`,
+    bgTabletWebp: `url(${bgTabletWebp.src})`,
+    bgDesktopWebp: `url(${bgDesktopWebp.src})`,
+  }}
+>
+  .project-link {
+    @apply bg-[image:var(--bgMobileWebp)] md:bg-[image:var(--bgTabletWebp)] xl:bg-[image:var(--bgDesktopWebp)];
+  }
+</style>

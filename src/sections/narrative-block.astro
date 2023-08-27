@@ -1,0 +1,65 @@
+---
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+
+interface Props {
+  heading: string;
+  content1?: string;
+  content2?: string;
+  bgPattern: string;
+  bgMobile: string;
+  bgTablet: string;
+  bgDesktop: string;
+  class?: string;
+  onRight?: boolean;
+}
+
+const {
+  heading,
+  content1,
+  content2,
+  bgPattern,
+  bgMobile,
+  bgTablet,
+  bgDesktop,
+  class: className,
+  onRight = false,
+} = Astro.props;
+---
+
+<Section class="pt-0 md:pt-[3.75rem] xl:pt-[5rem]">
+  <Container class="!px-0 md:!px-8 xl:!px-16">
+    <div class:list={["flex flex-col items-center justify-center rounded-2xl xl:flex-row xl:min-h-[40rem]", className]}>
+      <div
+        class:list={[
+          "narrative-block-bg h-[20rem] w-full bg-cover bg-no-repeat sm:rounded-t-2xl xl:h-[40rem] xl:rounded-none",
+          onRight ? "xl:order-2 xl:rounded-r-2xl xl:basis-3/7" : "xl:order-1 xl:rounded-l-2xl xl:basis-4/7",
+        ]}
+      >
+      </div>
+      <div
+        class:list={[
+          "flex w-full flex-col items-center justify-center gap-6 bg-provincial-pink bg-[length:36.5rem_36.5rem] bg-[bottom_left] bg-no-repeat px-6 py-20 text-center sm:rounded-b-2xl sm:bg-[bottom_3rem_center] md:bg-[bottom_3rem_center] md:px-[3.5rem] md:py-[4.25rem] lg:bg-[bottom_3rem_center] xl:min-h-[40rem] xl:items-start xl:rounded-none xl:bg-[bottom_left] xl:px-[6rem] xl:text-left",
+          onRight ? "xl:order-1 xl:rounded-l-2xl xl:basis-4/7" : "xl:order-2 xl:rounded-r-2xl xl:basis-3/7",
+        ]}
+        style={{ backgroundImage: `url('${bgPattern}')` }}
+      >
+        <h2 class="text-moccaccino">{heading}</h2>
+        {content1 && <p class="text-ship-grey md:max-w-[35rem] xl:max-w-[28rem] 2xl:max-w-full">{content1}</p>}
+        {content2 && <p class="text-ship-grey md:max-w-[35rem] xl:max-w-[28rem] 2xl:max-w-full">{content2}</p>}
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<style
+  define:vars={{
+    bgMobile: `url(${bgMobile})`,
+    bgTablet: `url(${bgTablet})`,
+    bgDesktop: `url(${bgDesktop})`,
+  }}
+>
+  .narrative-block-bg {
+    @apply bg-[image:var(--bgMobile)] md:bg-[image:var(--bgTablet)] xl:bg-[image:var(--bgDesktop)];
+  }
+</style>

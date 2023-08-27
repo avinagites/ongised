@@ -1,0 +1,38 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Container from "./container.astro";
+import Drawer from "./drawer.astro";
+import Logo from "./logo.astro";
+import Menu from "./menu.astro";
+
+const { lang, prefix } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+---
+
+<header
+  class="fixed z-50 flex min-h-[6rem] w-full bg-white/60 backdrop-blur-2xl transition-all duration-400 md:min-h-[9.688rem]"
+>
+  <Container class="flex items-center justify-between">
+    <Logo href={prefix} ariaLabel={t("site.title")} />
+    <Menu class="hidden md:flex" />
+    <Drawer class="md:hidden" />
+  </Container>
+</header>
+
+<style>
+  header.sm {
+    @apply md:min-h-[6rem];
+  }
+</style>
+
+<script>
+  window.addEventListener("scroll", function () {
+    const header = document.querySelector("header");
+    const scrollDistance = window.scrollY;
+
+    if (!header) return;
+
+    scrollDistance > 100 ? header.classList.add("sm") : header.classList.remove("sm");
+  });
+</script>

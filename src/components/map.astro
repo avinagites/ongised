@@ -1,0 +1,77 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Mapbox from "./mapbox.astro";
+import { getImage } from "astro:assets";
+
+import bgPattern from "../assets/bg-pattern-three-circles.svg";
+
+const optimizedBgPattern = await getImage({ src: bgPattern });
+
+interface Props {
+  location: CollectionEntry<"location">;
+  isEven?: boolean;
+  class?: string;
+}
+
+const {
+  location: { data },
+  isEven,
+  class: className,
+} = Astro.props;
+---
+
+<div
+  id={data.id}
+  class:list={["flex flex-col md:gap-8 xl:flex-row w-full", "scroll-mt-[6rem] md:scroll-mt-[9.688rem]", className]}
+>
+  <div class:list={["md:overflow-hidden md:rounded-2xl xl:basis-1/3", isEven ? "xl:order-1" : "xl:order-2"]}>
+    <Mapbox
+      latitude={data.map.latitude}
+      longitude={data.map.longitude}
+      zoom={11}
+      mapStyle="mapbox://styles/mapbox/streets-v12"
+      container={`map-${data.id}`}
+      accessToken={import.meta.env.PUBLIC_MAPBOX_ACCESS_TOKEN}
+      containerStyle="width: 100%; height: 20rem"
+    />
+  </div>
+  <div
+    class:list={[
+      "xl:py-18 flex flex-col items-center justify-center gap-6 bg-provincial-pink px-6 py-20 md:items-start md:rounded-2xl md:px-[4.5rem] md:py-[5.5rem] xl:basis-2/3 xl:px-24 xl:py-16",
+      "bg-no-repeat bg-[top_left] md:bg-[bottom_left]",
+      isEven ? "xl:order-2" : "xl:order-1",
+    ]}
+    style={{ backgroundImage: `url(${optimizedBgPattern.src});` }}
+  >
+    <h2 class="text-moccaccino">{data.title}</h2>
+    <div class="flex w-full flex-col items-center justify-center gap-6 md:flex-row md:justify-start">
+      <address>
+        <span class="font-bold">{data.address.title}</span>
+        <br />
+        {data.address.street}
+        <br />
+        {data.address.city}
+      </address>
+      <address>
+        <span class="font-bold">{data.contact.title}</span>
+        <br />
+        P : <a href={data.contact.phone.url} class="address-link focus-on-light">
+          {data.contact.phone.title}
+        </a>
+        <br />
+        M : <a href={data.contact.email.url} class="address-link focus-on-light">
+          {data.contact.email.title}
+        </a>
+      </address>
+    </div>
+  </div>
+</div>
+
+<style>
+  address {
+    @apply text-center font-jost text-base not-italic leading-[1.625rem] text-ship-grey md:basis-1/2 md:text-left lg:basis-1/3 xl:basis-1/2 2xl:basis-1/3;
+  }
+  .address-link {
+    @apply inline-flex rounded-tl-2xl rounded-tr-2xl border-b border-b-transparent leading-none transition-[border] duration-400 hover:border-b-ship-grey;
+  }
+</style>

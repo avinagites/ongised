@@ -1,0 +1,67 @@
+---
+import { getImage } from "astro:assets";
+import Main from "../components/main.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Footer from "../components/footer.astro";
+import Header from "../components/header.astro";
+import BaseLayout from "../layouts/base-layout.astro";
+import GetInTouch from "../sections/get-in-touch.astro";
+import HeroAbout from "../sections/hero-about.astro";
+import NarrativeBlock from "../sections/narrative-block.astro";
+import LocationBanner from "../sections/location-banner.astro";
+
+import bgPattern from "../assets/bg-pattern-three-circles.svg";
+
+import bgMobile1 from "../assets/about/mobile/image-world-class-talent.jpg";
+import bgTablet1 from "../assets/about/tablet/image-world-class-talent.jpg";
+import bgDesktop1 from "../assets/about/desktop/image-world-class-talent.jpg";
+
+import bgMobile2 from "../assets/about/mobile/image-real-deal.jpg";
+import bgTablet2 from "../assets/about/tablet/image-real-deal.jpg";
+import bgDesktop2 from "../assets/about/desktop/image-real-deal.jpg";
+
+const optimizedBgPattern = await getImage({ src: bgPattern });
+
+const optimizedBgMobile1 = await getImage({ src: bgMobile1, format: "webp" });
+const optimizedBgTablet1 = await getImage({ src: bgTablet1, format: "webp" });
+const optimizedBgDesktop1 = await getImage({ src: bgDesktop1, format: "webp" });
+
+const optimizedBgMobile2 = await getImage({ src: bgMobile2, format: "webp" });
+const optimizedBgTablet2 = await getImage({ src: bgTablet2, format: "webp" });
+const optimizedBgDesktop2 = await getImage({ src: bgDesktop2, format: "webp" });
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={`${t("about.title")} | ${t("site.title")}`}>
+  <Header />
+  <Main>
+    <HeroAbout />
+    <NarrativeBlock
+      heading={t("about.block1.heading")}
+      content1={t("about.block1.content1")}
+      content2={t("about.block1.content2")}
+      bgPattern={optimizedBgPattern.src}
+      bgMobile={optimizedBgMobile1.src}
+      bgTablet={optimizedBgTablet1.src}
+      bgDesktop={optimizedBgDesktop1.src}
+    />
+    <LocationBanner />
+    <NarrativeBlock
+      heading={t("about.block2.heading")}
+      content1={t("about.block2.content1")}
+      content2={t("about.block2.content2")}
+      bgPattern={optimizedBgPattern.src}
+      bgMobile={optimizedBgMobile2.src}
+      bgTablet={optimizedBgTablet2.src}
+      bgDesktop={optimizedBgDesktop2.src}
+      onRight={true}
+    />
+    <GetInTouch />
+  </Main>
+  <Footer />
+</BaseLayout>
+
+<style></style>

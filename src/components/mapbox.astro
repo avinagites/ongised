@@ -1,0 +1,61 @@
+---
+import "mapbox-gl/dist/mapbox-gl.css";
+
+export interface Props {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  mapStyle: string;
+  container: string;
+  accessToken: string;
+  interactive?: boolean;
+  containerStyle?: string;
+}
+
+const { latitude, longitude, zoom, mapStyle, container, accessToken, interactive = true, containerStyle } = Astro.props;
+---
+
+<mapbox-map
+  data-latitude={latitude}
+  data-longitude={longitude}
+  data-zoom={zoom}
+  data-map-style={mapStyle}
+  data-container={container}
+  data-access-token={accessToken}
+  data-interactive={`${interactive}`}
+  data-container-style={containerStyle}
+>
+  <div id={container} style={containerStyle}>Map</div>
+</mapbox-map>
+
+<script>
+  import mapboxgl from "mapbox-gl";
+
+  class MapboxMap extends HTMLElement {
+    constructor() {
+      super();
+
+      mapboxgl.accessToken = this.dataset.accessToken!;
+
+      const lngLat: [number, number] = [Number(this.dataset.longitude!), Number(this.dataset.latitude!)];
+
+      const map = new mapboxgl.Map({
+        container: this.dataset.container!,
+        interactive: JSON.parse(this.dataset.interactive!),
+        center: lngLat,
+        zoom: Number(this.dataset.zoom!),
+        style: this.dataset.mapStyle!, // https://docs.mapbox.com/api/maps/styles/
+      });
+
+      map.addControl(new mapboxgl.NavigationControl());
+
+      new mapboxgl.Marker({
+        color: "#972E17",
+      })
+        .setLngLat(lngLat)
+        .addTo(map);
+    }
+  }
+
+  customElements.define("mapbox-map", MapboxMap);
+</script>

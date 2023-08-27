@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import { getLangFromUrl } from "../i18n/utils";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+import Map from "../components/map.astro";
+
+const { lang } = getLangFromUrl(Astro.url);
+
+interface Props {
+  class?: string;
+  style?: string;
+}
+
+const { class: className, style } = Astro.props;
+
+const entries = await getCollection("location", ({ id }) => id.startsWith(`${lang}`));
+
+const locations = entries.filter(({ data }) => !data.isDraft);
+---
+
+<Section class="mb-[-4rem] !py-0 md:mb-[-1.5rem] md:!pb-[3.5rem] md:pt-0 xl:mb-0 xl:!pb-[5rem] xl:pt-0">
+  <Container class="!px-0 md:!px-8 xl:!px-16">
+    <div class:list={["flex flex-col gap-10 md:gap-[7.5rem] xl:gap-8", className]} style={style}>
+      {locations.map((location, index) => <Map location={location} isEven={!!(index % 2)} />)}
+    </div>
+  </Container>
+</Section>

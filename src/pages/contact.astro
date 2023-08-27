@@ -1,0 +1,24 @@
+---
+import Main from "../components/main.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Footer from "../components/footer.astro";
+import Header from "../components/header.astro";
+import BaseLayout from "../layouts/base-layout.astro";
+import LocationBanner from "../sections/location-banner.astro";
+import HeroContact from "../sections/hero-contact.astro";
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={`${t("contact.title")} | ${t("site.title")}`}>
+  <Header />
+  <Main>
+    <HeroContact />
+    <LocationBanner onContact={true} class="pb-[3.5rem] xl:pb-[5rem]" />
+  </Main>
+  <Footer isAlone={true} />
+</BaseLayout>
+
+<style></style>

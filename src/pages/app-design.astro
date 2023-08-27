@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import { getDesignsByCategory } from "../utils/get-designs-by-category";
+import { getSortedDesigns } from "../utils/get-sorted-designs";
+import Main from "../components/main.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Footer from "../components/footer.astro";
+import Header from "../components/header.astro";
+import BaseLayout from "../layouts/base-layout.astro";
+import Design from "../sections/design.astro";
+import GetInTouch from "../sections/get-in-touch.astro";
+import Project from "../sections/project.astro";
+import Spotlight from "../sections/spotlight.astro";
+import { getImage } from "astro:assets";
+
+import bgPattern from "../assets/app-design/bg-pattern.svg";
+
+const optimizedBgPattern = await getImage({ src: bgPattern });
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+
+const entries = await getCollection("design", ({ id }) => id.startsWith(`${lang}`));
+
+const filteredDesigns = getDesignsByCategory(entries, "app");
+
+const sortedDesigns = getSortedDesigns(filteredDesigns);
+---
+
+<BaseLayout>
+  <Header />
+  <Main>
+    <Spotlight
+      heading={t("app.heading")}
+      content={t("app.content")}
+      bgPattern={optimizedBgPattern.src}
+      class="bg-left"
+    />
+    <Design designs={sortedDesigns} />
+    <Project includeIds={["web-design", "graphic-design"]} />
+    <GetInTouch />
+  </Main>
+  <Footer />
+</BaseLayout>

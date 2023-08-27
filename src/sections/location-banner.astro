@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import { getLangFromUrl } from "../i18n/utils";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+
+const { lang, prefix } = getLangFromUrl(Astro.url);
+
+interface Props {
+  class?: string;
+  style?: string;
+  onContact?: boolean;
+}
+
+const { class: className, style, onContact = false } = Astro.props;
+
+const entries = await getCollection("location", ({ id }) => id.startsWith(`${lang}`));
+
+const locations = entries.filter(({ data }) => !data.isDraft);
+---
+
+<Section class={onContact ? "xl:overflow-hidden" : ""}>
+  <Container>
+    <div
+      class:list={["grid grid-cols-1 grid-rows-3 gap-12 md:gap-20 xl:grid-cols-3 xl:grid-rows-1 xl:gap-8", className]}
+      style={style}
+    >
+      {
+        locations.map(({ data }, index) => (
+          <div class="flex flex-col items-center gap-12 text-center">
+            <div class:list={["relative z-0 w-full max-w-[12.625rem]", `banner-oval-${index + 1}`]}>
+              <Image src={data.bg} alt={data.title} width={202} height={202} />
+            </div>
+            <div class="flex max-w-[25rem] flex-col items-center gap-8 md:max-w-full xl:gap-8">
+              <h3>{data.title}</h3>
+              <a href={`${prefix}${data.btn.url}`} aria-label={data.btn.aria} class="btn-on-light">
+                {data.btn.title}
+              </a>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div
+      class:list={[
+        "hidden xl:absolute xl:-z-20 xl:bg-athens-grey xl:opacity-50 xl:block xl:h-[37rem] xl:w-[62rem]",
+        onContact
+          ? "xl:right-[-4rem] xl:top-[6rem] xl:rounded-[18rem_18rem_18rem_0] 2xl:w-[75rem]"
+          : "xl:right-[-30rem] xl:top-[11.5rem] xl:rounded-[18rem_0_18rem_18rem] 2xl:right-[-27rem]",
+      ]}
+    >
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .banner-gradient-base {
+    @apply before:absolute before:inset-0 before:-z-10 before:aspect-square before:w-full before:max-w-[12.625rem] before:rounded-full before:from-[rgba(93,2,2,0.00)] before:to-[rgba(93,2,2,0.50)] before:opacity-20 before:content-[''];
+  }
+
+  .banner-oval-1 {
+    @apply banner-gradient-base before:bg-gradient-to-t;
+  }
+
+  .banner-oval-2 {
+    @apply banner-gradient-base before:bg-gradient-to-l;
+  }
+
+  .banner-oval-3 {
+    @apply banner-gradient-base before:bg-gradient-to-b;
+  }
+</style>

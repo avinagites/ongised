@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import { getLangFromUrl } from "../i18n/utils";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+import ProjectLink from "../components/project-link.astro";
+
+interface Props {
+  class?: string;
+  style?: string;
+  includeIds: string[];
+  sortDesc?: boolean;
+}
+
+const { class: className, style, includeIds, sortDesc } = Astro.props;
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const entries = await getCollection("project", ({ id }) => id.startsWith(`${lang}`));
+
+const filteredEntries = entries.filter(({ data }) => !data.isDraft && includeIds.includes(data.id));
+
+const projects = sortDesc ? filteredEntries.reverse() : filteredEntries;
+---
+
+<Section>
+  <Container>
+    <div
+      class:list={[
+        "grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8",
+        projects.length > 2 ? "grid-rows-3 xl:grid-rows-2" : "grid-rows-2 xl:grid-rows-1",
+        className,
+      ]}
+      style={style}
+    >
+      {projects.map((project) => <ProjectLink project={project} />)}
+    </div>
+  </Container>
+</Section>

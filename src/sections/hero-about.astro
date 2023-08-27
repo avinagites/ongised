@@ -1,0 +1,62 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Container from "../components/container.astro";
+import Section from "../components/section.astro";
+import { getImage } from "astro:assets";
+
+import bgMobile from "../assets/about/mobile/bg-hero.jpg";
+import bgTablet from "../assets/about/tablet/bg-hero.jpg";
+import bgDesktop from "../assets/about/desktop/bg-hero.jpg";
+
+import bgPattern from "../assets/about/bg-hero-pattern.svg";
+
+const optimizedBgMobile = await getImage({ src: bgMobile, format: "webp" });
+const optimizedBgTablet = await getImage({ src: bgTablet, format: "webp" });
+const optimizedBgDesktop = await getImage({ src: bgDesktop, format: "webp" });
+
+const optimizedBgPattern = await getImage({ src: bgPattern });
+
+const { lang } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<Section class="!py-0 sm:!pb-[3.75rem] md:mt-0 xl:!pb-[5rem] xl:pt-0">
+  <Container class="!px-0 md:!px-8 xl:!px-16">
+    <div class:list={["flex flex-col xl:flex-row sm:rounded-2xl xl:min-h-[30rem]", className]}>
+      <div
+        class="about-hero-bg 2xl:basis-4/7 h-[20rem] w-full bg-cover bg-no-repeat sm:rounded-t-2xl xl:order-2 xl:h-[30rem] xl:basis-2/5 xl:rounded-none xl:rounded-r-2xl"
+      >
+      </div>
+      <div
+        class="2xl:basis-3/7 flex flex-col items-center justify-center gap-6 bg-peach bg-[length:18.25rem_auto] bg-[top_-9.125rem_right] bg-no-repeat px-6 py-20 text-center sm:rounded-b-2xl md:gap-8 md:bg-[length:40rem_40rem] md:bg-[left_-9rem_bottom_5.5rem] md:px-14 md:py-16 lg:bg-[length:50rem_50rem] lg:bg-[left_-8rem_bottom_7rem] xl:order-1 xl:basis-3/5 xl:items-start xl:rounded-none xl:rounded-l-2xl xl:bg-[length:40rem_40rem] xl:bg-[bottom_right] xl:px-[5.5rem] xl:text-left 2xl:bg-[length:50rem_50rem]"
+        style={{ backgroundImage: `url('${optimizedBgPattern.src}');` }}
+      >
+        <h1 class="text-white">{t("about.hero.heading")}</h1>
+        <p class="text-white md:max-w-[31rem] xl:max-w-[29rem]">{t("about.hero.content")}</p>
+      </div>
+    </div>
+    <div
+      class="absolute left-[-5rem] top-[20rem] -z-20 hidden h-[37rem] w-[64rem] rounded-[18rem_18rem_18rem_0] bg-athens-grey opacity-50 xl:block 2xl:w-[80rem]"
+    >
+    </div>
+  </Container>
+</Section>
+
+<style
+  define:vars={{
+    bgMobile: `url(${optimizedBgMobile.src})`,
+    bgTablet: `url(${optimizedBgTablet.src})`,
+    bgDesktop: `url(${optimizedBgDesktop.src})`,
+  }}
+>
+  .about-hero-bg {
+    @apply bg-[image:var(--bgMobile)] md:bg-[image:var(--bgTablet)] xl:bg-[image:var(--bgDesktop)];
+  }
+</style>

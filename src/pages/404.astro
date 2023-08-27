@@ -1,0 +1,59 @@
+---
+import Container from "../components/container.astro";
+import Main from "../components/main.astro";
+import Section from "../components/section.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Footer from "../components/footer.astro";
+import Header from "../components/header.astro";
+import BaseLayout from "../layouts/base-layout.astro";
+import { getImage } from "astro:assets";
+
+import bgPatternMobile from "../assets/contact/mobile/bg-hero-pattern.svg";
+import bgPatternTablet from "../assets/contact/tablet/bg-hero-pattern.svg";
+
+const optimizedBgPatternMobile = await getImage({ src: bgPatternMobile });
+const optimizedBgPatternTablet = await getImage({ src: bgPatternTablet });
+
+const { lang, prefix } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={`${t("404.title")} | ${t("site.title")}`}>
+  <Header />
+  <Main
+    class="flex min-h-[calc(100vh-39.313rem)] flex-col justify-center md:min-h-[calc(100vh-20.688rem)] xl:min-h-[calc(100vh-20.188rem)]"
+  >
+    <Section>
+      <Container class="!px-0 md:!px-8 xl:!px-16">
+        <div
+          class:list={[
+            "pnf-pattern",
+            "flex flex-col items-center gap-12 px-6 py-[4.5rem] text-center sm:rounded-2xl md:items-start md:gap-10 md:px-16 md:text-left xl:flex-row xl:items-center xl:gap-24 xl:px-24",
+            "bg-peach bg-[top_left] bg-no-repeat md:bg-[top_-5rem_left_-5rem] xl:bg-[bottom_left]",
+          ]}
+        >
+          <div class="flex h-full flex-1 flex-col items-center justify-center gap-6 md:items-start md:gap-8">
+            <h1 class="text-white">{t("404.heading")}</h1>
+            <p class="text-white md:max-w-[35rem] xl:max-w-[27rem]">{t("404.content")}</p>
+            <a href={prefix} class="btn-on-dark focus-on-dark">
+              {t("404.btn.title")}
+            </a>
+          </div>
+        </div>
+      </Container>
+    </Section>
+  </Main>
+  <Footer isAlone={true} />
+</BaseLayout>
+
+<style
+  define:vars={{
+    bgMobile: `url(${optimizedBgPatternMobile.src})`,
+    bgTablet: `url(${optimizedBgPatternTablet.src})`,
+  }}
+>
+  .pnf-pattern {
+    @apply bg-[image:var(--bgMobile)] md:bg-[image:var(--bgTablet)];
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+import Container from "./container.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Logo from "./logo.astro";
+import Menu from "./menu.astro";
+import Social from "./social.astro";
+
+interface Props {
+  isAlone?: boolean;
+}
+
+const { isAlone = false } = Astro.props;
+
+const { lang, prefix } = getLangFromUrl(Astro.url);
+
+const t = useTranslations(lang);
+---
+
+<footer class:list={[isAlone ? "pt-16 md:pt-20 xl:pt-[4.5rem]" : "pt-60 md:pt-40 xl:pt-36", "bg-baltic pb-16"]}>
+  <Container>
+    <div
+      class="grid grid-cols-1 grid-rows-footer items-center gap-8 md:grid-cols-6 md:grid-rows-footer-md md:gap-x-0 md:gap-y-[2.625rem] xl:grid-cols-12"
+    >
+      <Logo
+        href={prefix}
+        ariaLabel={t("site.title")}
+        onDark={true}
+        class="justify-center md:order-1 md:col-span-3 md:justify-self-start xl:col-span-6"
+      />
+      <hr class="bg-white opacity-10 md:order-3 md:col-span-12" />
+      <Menu onDark={true} class="md:order-2 md:col-span-3 md:justify-self-end xl:col-span-6" />
+      <address class="md:order-4 md:col-span-2 xl:col-span-3">
+        <span class="font-bold">Designo Central Office</span>
+        <br />
+        3886 Wellington Street <br />
+        Toronto, Ontario M9C 3J5
+      </address>
+      <address class="md:order-5 md:col-span-2 xl:col-span-3">
+        <span class="font-bold">Contact Us (Central Office)</span>
+        <br />
+        P : <a href="tel:+12538638967" class="address-link focus-on-dark">+1 253-863-8967</a>
+        <br />
+        M : <a href="mailto:contact@designo.co" class="address-link focus-on-dark">contact@designo.co</a>
+      </address>
+      <Social class="md:order-6 md:col-span-2 md:justify-self-end xl:col-span-6" />
+    </div>
+  </Container>
+</footer>
+
+<style>
+  address {
+    @apply text-center font-jost text-base not-italic leading-[1.625rem] text-white opacity-50 md:text-left;
+  }
+  .address-link {
+    @apply inline-flex rounded-tl-2xl rounded-tr-2xl border-b border-b-transparent leading-none transition-[border] duration-400 hover:border-b-white;
+  }
+</style>
